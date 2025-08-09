@@ -1,9 +1,9 @@
 streamlit>=1.30.0
-pandas==2.1.4  # 降低pandas版本以兼容旧numpy
-numpy==1.24.4  # 这个版本有obj2sctype且支持distutils替代方案
+pandas==1.5.3  # 这个版本兼容numpy 1.24.x
+numpy==1.24.4
 joblib>=1.3.0
 shap==0.41.0   # 与numpy 1.24.x兼容
 matplotlib==3.7.2
 scipy==1.10.1
 plotly>=5.15.0
-setuptools==65.5.0  # 提供distutils替代功能
+setuptools==65.5.0
