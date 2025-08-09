@@ -3,10 +3,10 @@
 developmentMode = false
 
 [server]
-# 端口设置
-port = 8501
-# 启用CORS
-enableCORS = false
+# 端口设置 - Streamlit Cloud会自动分配端口
+# port = 8501  # 注释掉，让Streamlit Cloud自动处理
+# 启用CORS - 修复冲突
+# enableCORS = false  # 注释掉，避免与XSRF保护冲突
 # 启用WebSocket压缩
 enableWebsocketCompression = true
 # 运行状态检查
@@ -25,10 +25,10 @@ backgroundColor = "#FFFFFF"
 secondaryBackgroundColor = "#F0F2F6"
 textColor = "#262730"
 
-[client]
-# 客户端设置
-caching = true
-displayEnabled = true
+# 移除已弃用的client配置
+# [client]
+# caching = true  # 已弃用
+# displayEnabled = true  # 已弃用
 
 [logger]
 # 日志级别
