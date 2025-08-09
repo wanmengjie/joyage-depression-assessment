@@ -637,9 +637,21 @@ st.markdown("""
 @st.cache_resource
 def load_models():
     """优化的模型加载器 - 支持多重备选策略"""
-    models_dir = Path("saved_models")
+    # 智能模型目录定位 - 同时支持本地和Streamlit Cloud
+    script_dir = Path(__file__).parent
+    candidate_dirs = [
+        script_dir / "saved_models",  # 脚本同级目录（推荐）
+        Path.cwd() / "saved_models",  # 工作目录（兼容）
+        Path("saved_models")  # 相对路径（备选）
+    ]
     
-    if not models_dir.exists():
+    models_dir = None
+    for candidate in candidate_dirs:
+        if candidate.exists() and candidate.is_dir():
+            models_dir = candidate
+            break
+    
+    if models_dir is None:
         return None, None, "❌ Models directory not found / 模型目录不存在 / 모델 디렉토리를 찾을 수 없습니다"
         
     # 模型优先级策略
