@@ -1,6 +1,8 @@
 streamlit>=1.30.0
 pandas>=2.2.0
+numpy==1.23.5  # 确保包含obj2sctype函数
 joblib>=1.3.0
+shap==0.40.0   # 这个版本与numpy 1.23.x完全兼容
+matplotlib==3.7.2
 scipy==1.10.1
-numpy==1.26.4
-shap @ git+https://github.com/slundberg/shap.git@master
+plotly>=5.15.0
