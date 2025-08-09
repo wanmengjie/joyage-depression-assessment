@@ -1,13 +1,3 @@
-# 升级到支持 Python 3.13 的版本
-streamlit>=1.30.0  # 比 1.28.0 更兼容新版本 Python
-pandas>=2.2.0      # 替代 2.0.3，解决兼容性
-numpy>=1.26.0      # 替代 1.24.3，移除对 distutils 的依赖
-# 保留其他必要的包（根据你的应用需求）
-joblib==1.3.2
-shap==0.43.0
-matplotlib==3.7.2
-plotly==5.17.0
-scikit-learn==1.3.0
-catboost==1.2.2
-lightgbm==4.1.0
-xgboost==1.7.6 
+streamlit>=1.30.0
+pandas>=2.2.0
+numpy>=1.26.0
