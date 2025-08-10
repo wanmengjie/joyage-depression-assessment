@@ -46,12 +46,6 @@ LANGUAGES = {
         'family_info': '👨‍👩‍👧‍👦 家庭信息',
         'predict_button': '🔮 开始预测',
         'prediction_results': '📋 预测结果',
-        'assessment_result': '📊 评估结果',
-        'depression_probability': '抑郁风险概率',
-        'risk_classification': '风险分级标准',
-        'low_risk_desc': '低风险 (<30%): 常规监测',
-        'medium_risk_desc': '中等风险 (30-70%): 加强关注',
-        'high_risk_desc': '高风险 (>70%): 立即干预',
         'personal_analysis': '📊 个人化解释分析',
         'core_features': '🔍 核心重要特征',
         'high_risk': '⚠️ 高抑郁风险',
@@ -76,7 +70,7 @@ LANGUAGES = {
         'shap_y_axis': '特征'
     },
     'en': {
-        'app_title': '🧠 JoyAge Depression Risk Assessment Platform (45+)',
+        'app_title': '🧠 Goal & Mission',
         'language_select': 'Select Language',
         'personal_info': '📝 Personal Information Input',
         'basic_info': '👤 Basic Information',
@@ -87,12 +81,6 @@ LANGUAGES = {
         'family_info': '👨‍👩‍👧‍👦 Family Information',
         'predict_button': '🔮 Start Prediction',
         'prediction_results': '📋 Prediction Results',
-        'assessment_result': '📊 Assessment Result',
-        'depression_probability': 'Depression Probability',
-        'risk_classification': 'Risk Classification Criteria',
-        'low_risk_desc': 'Low Risk (<30%): Routine monitoring',
-        'medium_risk_desc': 'Medium Risk (30-70%): Enhanced surveillance',
-        'high_risk_desc': 'High Risk (>70%): Immediate intervention',
         'personal_analysis': '📊 Personalized Explanation Analysis',
         'core_features': '🔍 Core Important Features',
         'high_risk': '⚠️ High Depression Risk',
@@ -117,7 +105,7 @@ LANGUAGES = {
         'shap_y_axis': 'Features'
     },
     'ko': {
-        'app_title': '🧠 JoyAge 우울 위험 평가 플랫폼 (45+)',
+        'app_title': '🧠 목표 비전',
         'language_select': '언어 선택',
         'personal_info': '📝 개인정보 입력',
         'basic_info': '👤 기본 정보',
@@ -128,12 +116,6 @@ LANGUAGES = {
         'family_info': '👨‍👩‍👧‍👦 가족 정보',
         'predict_button': '🔮 예측 시작',
         'prediction_results': '📋 예측 결과',
-        'assessment_result': '📊 평가 결과',
-        'depression_probability': '우울 위험 확률',
-        'risk_classification': '위험 분류 기준',
-        'low_risk_desc': '낮은 위험 (<30%): 정기 모니터링',
-        'medium_risk_desc': '중간 위험 (30-70%): 강화 관찰',
-        'high_risk_desc': '높은 위험 (>70%): 즉시 개입',
         'personal_analysis': '📊 개인화된 설명 분석',
         'core_features': '🔍 핵심 중요 특성',
         'high_risk': '⚠️ 높은 우울증 위험',
@@ -637,21 +619,9 @@ st.markdown("""
 @st.cache_resource
 def load_models():
     """优化的模型加载器 - 支持多重备选策略"""
-    # 智能模型目录定位 - 同时支持本地和Streamlit Cloud
-    script_dir = Path(__file__).parent
-    candidate_dirs = [
-        script_dir / "saved_models",  # 脚本同级目录（推荐）
-        Path.cwd() / "saved_models",  # 工作目录（兼容）
-        Path("saved_models")  # 相对路径（备选）
-    ]
+    models_dir = Path("saved_models")
     
-    models_dir = None
-    for candidate in candidate_dirs:
-        if candidate.exists() and candidate.is_dir():
-            models_dir = candidate
-            break
-    
-    if models_dir is None:
+    if not models_dir.exists():
         return None, None, "❌ Models directory not found / 模型目录不存在 / 모델 디렉토리를 찾을 수 없습니다"
         
     # 模型优先级策略
@@ -1124,37 +1094,28 @@ def risk_gauge(probability, age, gender):
 
 RISK_THRESHOLDS = {'low': 0.3, 'high': 0.7}
 
-def get_risk_style(prob, lang='en'):
-    """根据概率获取风险样式 - 支持多语言"""
-    # 风险级别翻译
-    risk_levels = {
-        'zh': {'low': '低风险', 'medium': '中等风险', 'high': '高风险'},
-        'en': {'low': 'Low Risk', 'medium': 'Medium Risk', 'high': 'High Risk'},
-        'ko': {'low': '낮은 위험', 'medium': '중간 위험', 'high': '높은 위험'}
-    }
-    
+def get_risk_style(prob):
     if prob <= RISK_THRESHOLDS['low']:
-        return (risk_levels[lang]['low'], "#2ecc71", "✅")
+        return ("Low Risk", "#2ecc71", "✅")
     elif prob <= RISK_THRESHOLDS['high']:
-        return (risk_levels[lang]['medium'], "#f1c40f", "⚠️")
+        return ("Medium Risk", "#f1c40f", "⚠️")
     else:
-        return (risk_levels[lang]['high'], "#e74c3c", "🚨")
+        return ("High Risk", "#e74c3c", "🚨")
 
 def render_result_card(prob):
-    lang = get_language()
-    risk_level, color, icon = get_risk_style(prob, lang)
-    st.subheader(get_text("assessment_result"))
+    risk_level, color, icon = get_risk_style(prob)
+    st.subheader("Assessment Result")
     st.markdown(f"""
     <div style="border:2px solid {color}; border-radius:10px; padding:20px;">
         <h3 style="color:{color}; text-align:center; font-size:28px;">{icon} {risk_level}</h3>
-        <p style="text-align:center; font-size:28px; font-weight:700;">{get_text("depression_probability")}: {prob*100:.1f}%</p>
+        <p style="text-align:center; font-size:28px; font-weight:700;">Depression Probability: {prob*100:.1f}%</p>
     </div>
     """, unsafe_allow_html=True)
-    with st.expander(get_text("risk_classification")):
-        st.markdown(f"""
-        - {get_text("low_risk_desc")}
-        - {get_text("medium_risk_desc")}  
-        - {get_text("high_risk_desc")}
+    with st.expander("Risk Classification Criteria"):
+        st.markdown("""
+        - Low (<30%): Routine monitoring  
+        - Medium (30–70%): Enhanced surveillance  
+        - High (>70%): Immediate intervention
         """)
 
 def render_key_factors_table(shap_values, feature_names):
@@ -1253,10 +1214,8 @@ def main():
     
     with col1:
         # 使用卡片容器包装预测结果
-        st.markdown(f'''
-        <div class="card-container">
-            <div class="section-header">{get_text("prediction_results")}</div>
-        ''', unsafe_allow_html=True)
+        st.markdown('<div class="card-container">', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header">{get_text("prediction_results")}</div>', unsafe_allow_html=True)
         
         # 获取用户输入（完整42个特征）
         inputs = create_complete_input_form()
@@ -1297,9 +1256,9 @@ def main():
                     st.session_state['prediction_done'] = True
                     st.session_state['X'] = X
                     st.session_state['risk_prob'] = risk_prob
-                    # 🔧 修复SHAP缓存错误：每次预测都更新SHAP值，确保动态变化
-                    st.session_state['shap_values'] = shap_values
-                    st.session_state['expected_value'] = expected_value
+                    if 'shap_values' not in st.session_state and 'expected_value' not in st.session_state:
+                        st.session_state['shap_values'] = shap_values
+                        st.session_state['expected_value'] = expected_value
                     
                 except Exception as e:
                     st.error(f"Prediction failed / 预测失败: {str(e)}")
@@ -1308,10 +1267,8 @@ def main():
     
     with col2:
         # 使用卡片容器包装SHAP分析
-        st.markdown(f'''
-        <div class="card-container">
-            <div class="section-header">{get_text("personal_analysis")}</div>
-        ''', unsafe_allow_html=True)
+        st.markdown('<div class="card-container">', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-header">{get_text("personal_analysis")}</div>', unsafe_allow_html=True)
         
         if st.session_state.get('prediction_done', False):
             X = st.session_state['X']
